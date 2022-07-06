@@ -6,6 +6,14 @@
     
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #55DDB7;
+}
+
 button{
     cursor: pointer;
 }
@@ -17,50 +25,21 @@ button:hover {
 button:active {
     background: #0069D9;
 }
-.game__menu {
-    background: white;
-    position: absolute;
-    top: 30%;
-    border: 3px #000 solid;
-    padding: 2rem;
-    border-radius: 10px;
-}
 
-.goal {
-    display: flex;
-    font-size: 28px;
-    justify-content: center;
-    margin-top: 2.5rem;
+
+/* =============== GAME MENU =============== */
+.game__menu {
+    position: absolute;
+    top: 180px;
+    background: white;
+    border: 3px #000 solid;
+    border-radius: 10px;
+    padding: 2rem;
 }
 
 .top {
     display: flex;
     gap: 2.5rem;
-}
-
-.name__input{
-    border: 2px #000 solid;
-    border-radius: 10px;
-    padding: .5rem;
-}
-
-.name__submit {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-    gap: .75rem;
-}
-
-.btn__start {
-    border: 1px #000 solid;
-    border-radius: 5px;
-    padding: .5rem;
-    background-color:#34baab ;
-    color: white;
-}
-
-.control h5 {
-    font-size: 32px;
 }
 
 .logo {
@@ -78,13 +57,44 @@ button:active {
     height: 130px;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.control h5 {
+    font-size: 32px;
 }
 
+.goal {
+    display: flex;
+    font-size: 28px;
+    justify-content: center;
+    margin-top: 2.5rem;
+}
+
+.name__submit {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    gap: .75rem;
+}
+
+.name__input{
+    border: 2px #000 solid;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.btn__start {
+    border: none;
+    border-radius: 5px;
+    padding: .5rem 2rem;
+    background-color:#34baab ;
+    color: white;
+}
+.btn__start:disabled {
+    background-color:#ddd ;
+    color: white;
+}
+
+
+/* =============== DISPLAY GAME =============== */
 .display {
     padding: 2rem;
     background-color: #55DDB7;
@@ -99,9 +109,11 @@ body {
 }
 
 .score {
+    color: #FFF;
+    font-weight: 600;
+    font-size: 22px;
     justify-content: left;
 }
-
 
 .phytons {
     display: flex;
@@ -109,6 +121,9 @@ body {
 }
 
 .time {
+    color: #FFF;
+    font-weight: 600;
+    font-size: 22px;
     display: flex;
     justify-content: right;
 }

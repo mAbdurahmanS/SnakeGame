@@ -14,35 +14,35 @@
 </head>
 
 <body>
+  <div id="name__user"></div>
+  <div id="score__user"></div>
   
-  <canvas id="game" width="960" height="600"></canvas>
-<!-- <div class="game__menu">
-    <div class="top">
-      <img class="logo" src="design/game_icon.png" alt="">
-      <div class="game__control">
-        <img class="wasd" src="design/wasd.png" alt="">
-        
-      </div>
-      <div class="control">
-        <h5>W - To move up</h5>
-        <h5>S - To move down</h5>
-        <h5>A - To go left</h5>
-        <h5>D - To go right</h5>
-      </div>
-      
-    </div>
-    <div class="bottom">
-      <div class="goal">
-        <h5>Goal : Eat as many apples as you can!<br>And don't crash at your own tail!</h5>
-      </div>
-      <form action="">
-        <div class="name__submit">
-          <input type="text" placeholder="Name" id="name" class="name__input">
-          <button type="submit" class="btn__start">Start</button>
+    <div class="game__menu" id="game__menu">
+      <div class="top">
+        <img class="logo" src="design/game_icon.png" alt="">
+        <div class="game__control">
+          <img class="wasd" src="design/wasd.png" alt="">
         </div>
-      </form>
+        <div class="control">
+          <h5>W - To move up</h5>
+          <h5>S - To move down</h5>
+          <h5>A - To go left</h5>
+          <h5>D - To go right</h5>
+        </div>
+      </div>
+
+      <div class="bottom">
+        <div class="goal">
+          <h5>Goal : Eat as many apples as you can!<br>And don't crash at your own tail!</h5>
+        </div>
+        <form>
+          <div class="name__submit">
+            <input type="text" onkeyup="success()" placeholder="Name" id="name" class="name__input">
+            <button type="button" id="btn__start" onclick="getValueInput()" class="btn__start" disabled>Start</button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
   
 
   <div class="display">
@@ -61,10 +61,58 @@
           </div>
         </div>
       </div>
+
+      <canvas id="game" width="400" height="400"></canvas>
+
+
       <div class="footer">
-        <button type="button" class="reload__btn" href="#">Reload</button>
+        <button type="button" class="reload__btn" href="#" >Reload</button>
       </div>
-  </div> -->
+  </div>
+
+  <script>
+
+    const getValueInput = () => {
+      // DISPLAY NAME
+      let inputName = document.getElementById("name").value;
+      let inputScore = document.getElementById("score").value;
+      let valueName = document.getElementById("name__user");
+      let valueScore = document.getElementById("score__user");
+      // document.getElementById("valueName").innerHTML = inputName;
+
+      //ADD DATA TO LOCAL STORAGE
+      localStorage.setItem('name', inputName)
+      localStorage.setItem('score', inputScore)
+
+      //DISPLAY DATA FROM LOCALSTORAGE
+      valueName.textContent=localStorage.getItem("name")
+      valueScore.textContent=localStorage.getItem("score")
+
+      // CLOSE INSTRUCTION
+      let x = document.getElementById("game__menu");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+
+      drawGame()
+
+    }
+
+    // DISABLE BUTTON
+    function success() {
+      if(document.getElementById("name").value==="") {
+        document.getElementById('btn__start').disabled = true;
+      } else {
+        document.getElementById('btn__start').disabled = false;
+      }
+    }
+
+    //ClOSE INSTRUCTION
+
+
+  </script>
 
   <script src="index.js"></script>
 
