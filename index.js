@@ -1,194 +1,242 @@
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const getValueInput = () => {
+    // DISPLAY NAME
+    let inputName = document.getElementById("name").value;
+    let inputTime = document.getElementById("current-time").value;
+    let valueName = document.getElementById("name__user");
+    let valueTIme = document.getElementById("time__user");
 
-class SnakePart {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-}
+    //ADD DATA TO LOCAL STORAGE
+    localStorage.setItem('name', inputName)
 
-let speed = 7;
+    //DISPLAY DATA FROM LOCALSTORAGE
+    valueName.textContent=localStorage.getItem("name")
 
-let tileCount = 20;
-let tileSize = canvas.width / tileCount - 2;
-
-let headX = 10;
-let headY = 10;
-const snakeParts = [];
-let tailLength = 2;
-
-let appleX = 5;
-let appleY = 5;
-
-let inputsXVelocity = 0;
-let inputsYVelocity = 0;
-
-let xVelocity = 0;
-let yVelocity = 0;
-
-let score = 0;
-
-const gulpSound = new Audio("gulp.mp3");
-
-//game loop
-function drawGame() {
-  xVelocity = inputsXVelocity;
-  yVelocity = inputsYVelocity;
-
-  changeSnakePosition();
-  let result = isGameOver();
-  if (result) {
-    return;
-  }
-
-  clearScreen();
-
-  checkAppleCollision();
-  drawApple();
-  drawSnake();
-
-  drawScore();
-
-  if (score > 5) {
-    speed = 9;
-  }
-  if (score > 10) {
-    speed = 11;
-  }
-
-  setTimeout(drawGame, 1000 / speed);
-}
-
-function isGameOver() {
-  let gameOver = false;
-
-  if (yVelocity === 0 && xVelocity === 0) {
-    return false;
-  }
-
-  //walls
-  if (headX < 0) {
-    gameOver = true;
-  } else if (headX === tileCount) {
-    gameOver = true;
-  } else if (headY < 0) {
-    gameOver = true;
-  } else if (headY === tileCount) {
-    gameOver = true;
-  }
-
-  for (let i = 0; i < snakeParts.length; i++) {
-    let part = snakeParts[i];
-    if (part.x === headX && part.y === headY) {
-      gameOver = true;
-      break;
-    }
-  }
-
-  if (gameOver) {
-    ctx.fillStyle = "white";
-    ctx.font = "50px Verdana";
-
-    if (gameOver) {
-      ctx.fillStyle = "white";
-      ctx.font = "50px Verdana";
-
-      var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-      gradient.addColorStop("0", " magenta");
-      gradient.addColorStop("0.5", "blue");
-      gradient.addColorStop("1.0", "red");
-      // Fill with gradient
-      ctx.fillStyle = gradient;
-
-      ctx.fillText("Game Over!", canvas.width / 6.5, canvas.height / 2);
+    // CLOSE INSTRUCTION
+    let x = document.getElementById("game__menu");
+    if (x.style.display === "none") {
+    x.style.display = "block";
+    } else {
+    x.style.display = "none";
     }
 
-    ctx.fillText("Game Over!", canvas.width / 6.5, canvas.height / 2);
-  }
-
-  return gameOver;
+    startGame();
+    
 }
 
-function drawScore() {
-  ctx.fillStyle = "white";
-  ctx.font = "10px Verdana";
-  ctx.fillText("Score " + score, canvas.width - 50, 10);
+// DISABLE BUTTON
+function success() {
+    if(document.getElementById("name").value==="") {
+    document.getElementById('btn__start').disabled = true;
+    } else {
+    document.getElementById('btn__start').disabled = false;
+    }
 }
 
-function clearScreen() {
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
 
-function drawSnake() {
-  ctx.fillStyle = "green";
-  for (let i = 0; i < snakeParts.length; i++) {
-    let part = snakeParts[i];
-    ctx.fillRect(part.x * tileCount, part.y * tileCount, tileSize, tileSize);
+function startGame() {
+
+  var cvs = document.getElementById("game");
+  var ctx = cvs.getContext("2d");
+
+  var cvsW = cvs.width;
+  var cvsH = cvs.height;
+
+  var snakeW = 10;
+  var snakeH = 10;
+
+  // Timer
+  const time_el = document.getElementById('current-time');
+
+  let seconds = 0;
+  let interval = null;
+
+  function timer () {
+    seconds++;
+
+    // format our time
+    let hrs = Math.floor(seconds / 3600);
+    let mins = Math.floor((seconds - (hrs * 3600)) / 60);
+    let secs = seconds % 60;
+
+    if (secs < 10) secs = '0' + secs;
+    if (mins < 10) mins = '0' + mins;
+    if (hrs < 10) hrs = '0' + hrs;
+
+    time_el.innerText = `${hrs}:${mins}:${secs}`;
+
+    let inputTime = `${hrs}:${mins}:${secs}`;
+    let valueTime = document.getElementById("time__user");
+    localStorage.setItem('time', inputTime)
+    valueTime.textContent=localStorage.getItem("time")
   }
 
-  snakeParts.push(new SnakePart(headX, headY)); //put an item at the end of the list next to the head
-  while (snakeParts.length > tailLength) {
-    snakeParts.shift(); // remove the furthet item from the snake parts if have more than our tail size.
+  function start() {
+    if (interval) {
+      return
+    }
+    
+    interval = setInterval(timer, 1000);
+    
   }
 
-  ctx.fillStyle = "orange";
-  ctx.fillRect(headX * tileCount, headY * tileCount, tileSize, tileSize);
-}
-
-function changeSnakePosition() {
-  headX = headX + xVelocity;
-  headY = headY + yVelocity;
-}
-
-function drawApple() {
-  ctx.fillStyle = "red";
-  ctx.fillRect(appleX * tileCount, appleY * tileCount, tileSize, tileSize);
-}
-
-function checkAppleCollision() {
-  if (appleX === headX && appleY == headY) {
-    appleX = Math.floor(Math.random() * tileCount);
-    appleY = Math.floor(Math.random() * tileCount);
-    tailLength++;
-    score++;
-    gulpSound.play();
-  }
-}
-
-document.body.addEventListener("keydown", keyDown);
-
-function keyDown(event) {
-  //up
-  if (event.keyCode == 38 || event.keyCode == 87) {
-    //87 is w
-    if (inputsYVelocity == 1) return;
-    inputsYVelocity = -1;
-    inputsXVelocity = 0;
+  function stop() {
+    clearInterval(interval);
+    interval = null;
   }
 
-  //down
-  if (event.keyCode == 40 || event.keyCode == 83) {
-    // 83 is s
-    if (inputsYVelocity == -1) return;
-    inputsYVelocity = 1;
-    inputsXVelocity = 0;
+  function reset() {
+    stop();
+    seconds = 0;
+    time_el.innerText = '00:00:00';
   }
 
-  //left
-  if (event.keyCode == 37 || event.keyCode == 65) {
-    // 65 is a
-    if (inputsXVelocity == 1) return;
-    inputsYVelocity = 0;
-    inputsXVelocity = -1;
+
+  // score var
+  var score = 0;
+
+  // default direction
+  var direction = "right";
+
+  // read users direction
+  document.addEventListener("keydown", getDirection);
+
+  function getDirection(e) {
+      if(e.keyCode == 65 && direction != "right"){
+          direction = "left";
+      }else if(e.keyCode == 87 && direction != "down"){
+          direction = "up";
+      }else if(e.keyCode == 68 && direction != "left"){
+          direction = "right";
+      }else if(e.keyCode == 83 && direction != "up"){
+          direction = "down";
+      }
   }
 
-  //right
-  if (event.keyCode == 39 || event.keyCode == 68) {
-    //68 is d
-    if (inputsXVelocity == -1) return;
-    inputsYVelocity = 0;
-    inputsXVelocity = 1;
+  function drawSnake(x,y) {
+      ctx.fillStyle = "#FFF";
+      ctx.fillRect(x*snakeW,y*snakeH, snakeW, snakeH);
+
+      ctx.fillStyle = "#000";
+      ctx.strokeRect(x*snakeW, y*snakeH, snakeW, snakeH);
   }
+
+  // create our snake object, it will container 4 cells in default
+  var len = 6;
+  var snake = [];
+
+  for (var i = len-1; i>= 0; i--) {
+      snake.push (
+          {
+              x:i+30,
+              y:30
+          }
+      );
+  }
+
+  // create our apple object, it will container 4 cells in default
+  // var apples = 4;
+  // var food = [];
+
+  // for (var i = apples-1; i >= 0; i--){
+  //     food.push(
+  //         {
+  //             x : Math.round(Math.random()*(cvsW/snakeW-1)+1),
+  //             y : Math.round(Math.random()*(cvsH/snakeH-1)+1)
+  //         }
+  //     ) 
+  // }
+
+  // create some food
+  food = {
+      x : Math.round(Math.random()*(cvsW/snakeW-1)+1),
+      y : Math.round(Math.random()*(cvsH/snakeH-1)+1)
+  }
+
+  // draw food function
+  function drawFood(x,y) {
+      ctx.fillStyle = "yellow";
+      ctx.fillRect(x*snakeW,y*snakeH, snakeW, snakeH);
+
+      ctx.fillStyle = "#000";
+      ctx.strokeRect(x*snakeW, y*snakeH, snakeW, snakeH);
+  }
+
+  // check cllision function
+  // function checkCollision(x,y,array){
+  //     for(var i = 0; i < array.length; i++){
+  //         if(x == array[i].x && y == array[i].y){
+  //         }
+  //     }
+  // }
+
+  function drawScore(x){
+    document.getElementById('score').innerText = score;
+  }
+
+  function draw() {
+      ctx.clearRect(0,0,cvsW, cvsH);
+      for (var i=0; i<snake.length;i++) {
+          var x = snake[i].x;
+          var y = snake[i].y;
+          drawSnake(x,y);
+      }
+      // for (var i=0; i<food.length;i++) {
+      //     var x = food[i].x;
+      //     var y = food[i].y;
+      //     drawFood(x,y);
+      // }
+      
+      // drawFood
+      drawFood(food.x, food.y);
+  
+      // snake head
+      var snakeX = snake[0].x;
+      var snakeY = snake[0].y;
+
+      // if the snake hits the wall, it's a game over
+      if(snakeX < 0 || snakeY < 0 || snakeX >= cvsW/snakeW || snakeY >= cvsH/snakeH){
+        stop();
+        document.getElementById("game__over").style.display = "block";
+        return false;
+    }
+
+      // create a new head, based on the previous head and the direction
+
+      if(direction == "left") snakeX--;
+      else if(direction == "up") snakeY--;
+      else if(direction == "right") snakeX++;
+      else if(direction == "down") snakeY++;
+
+      // if our snake eats the food
+      if(snakeX == food.x && snakeY == food.y) {
+          food = {
+                  x : Math.round(Math.random()*(cvsW/snakeW-1)+1),
+                  y : Math.round(Math.random()*(cvsH/snakeH-1)+1)
+              }
+          var newHead = {
+              x : snakeX,
+              y : snakeY
+          };
+          score++;
+            let inputScore = score;
+            let valueScore = document.getElementById("score__user");
+            localStorage.setItem('score', inputScore)
+            valueScore.textContent=localStorage.getItem("score")
+      }else{
+          snake.pop();
+          var newHead = {
+              x : snakeX,
+              y : snakeY
+          };
+      }
+
+      snake.unshift(newHead);
+      drawScore(score);
+
+  }
+
+  start();
+  setInterval(draw, 130);
+
+
 }

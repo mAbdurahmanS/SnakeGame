@@ -14,8 +14,6 @@
 </head>
 
 <body>
-  <div id="name__user"></div>
-  <div id="score__user"></div>
   
     <div class="game__menu" id="game__menu">
       <div class="top">
@@ -38,7 +36,7 @@
         <form>
           <div class="name__submit">
             <input type="text" onkeyup="success()" placeholder="Name" id="name" class="name__input">
-            <button type="button" id="btn__start" onclick="getValueInput()" class="btn__start" disabled>Start</button>
+            <button type="button" id="btn__start" onclick="getValueInput()" class="btn__start" disabled>Enter</button>
           </div>
         </form>
       </div>
@@ -46,12 +44,12 @@
   
 
   <div class="display">
-     <div class="header">
+     <div class="header" id="header">
         <div class="score">
           <img class="score__img" src="design/score.png" alt="" />
           <p id="score">0</p>
         </div>
-        <div class="phytons">
+        <div class="phytons" id="pythons">
           <img class="python__img" src="design/phytons.png" alt="" />
         </div>
         <div class="time">
@@ -62,57 +60,20 @@
         </div>
       </div>
 
-      <canvas id="game" width="400" height="400"></canvas>
-
-
-      <div class="footer">
-        <button type="button" class="reload__btn" href="#" >Reload</button>
+      <div class="body">
+        <canvas id="game" width="960px" height="600px"></canvas>
       </div>
   </div>
 
-  <script>
-
-    const getValueInput = () => {
-      // DISPLAY NAME
-      let inputName = document.getElementById("name").value;
-      let inputScore = document.getElementById("score").value;
-      let valueName = document.getElementById("name__user");
-      let valueScore = document.getElementById("score__user");
-      // document.getElementById("valueName").innerHTML = inputName;
-
-      //ADD DATA TO LOCAL STORAGE
-      localStorage.setItem('name', inputName)
-      localStorage.setItem('score', inputScore)
-
-      //DISPLAY DATA FROM LOCALSTORAGE
-      valueName.textContent=localStorage.getItem("name")
-      valueScore.textContent=localStorage.getItem("score")
-
-      // CLOSE INSTRUCTION
-      let x = document.getElementById("game__menu");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
-
-      drawGame()
-
-    }
-
-    // DISABLE BUTTON
-    function success() {
-      if(document.getElementById("name").value==="") {
-        document.getElementById('btn__start').disabled = true;
-      } else {
-        document.getElementById('btn__start').disabled = false;
-      }
-    }
-
-    //ClOSE INSTRUCTION
-
-
-  </script>
+  <div class="game__over" id="game__over">
+    <div>
+      <h2>Name: <span id="name__user"></span></h2>
+      <h2>Score: <span id="score__user"></span></h2>
+      <h2>Time: <span id="time__user">00:00:00</span></h2>
+    </div>
+    <h1>Game Over!!</h1>
+    <a href="">Play again?</a>
+  </div>
 
   <script src="index.js"></script>
 
